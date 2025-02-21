@@ -1,16 +1,16 @@
-import Fastify from "fastify";
-import { connectDB } from "./plugins/db";
-import { authRoutes } from "./routes/auth.routes";
-
-connectDB();
+import Fastify from 'fastify';
+import { authRoutes } from './routes/auth.routes';
+import { statusRoute } from './routes/status.route';
 
 const fastify = Fastify({
-  logger: true
-})
+  logger: true,
+});
 
-fastify.get('/', (_request, _reply) => {
-  _reply.send({ hello: 'world' });
-})
+fastify.get('/', (request, reply) => {
+  reply.send({ hello: 'world' });
+});
+
+fastify.register(statusRoute);
 
 fastify.register(authRoutes);
 
@@ -19,4 +19,4 @@ fastify.listen({ port: 3000 }, (_err, _address) => {
     fastify.log.error(_err);
     process.exit(1);
   }
-})
+});
