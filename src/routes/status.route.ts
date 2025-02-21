@@ -5,7 +5,6 @@ import { connectDB } from '../plugins/db';
 export async function statusRoute(app: FastifyInstance) {
   app.get('/status', async (request, reply) => {
     try {
-      await connectDB();
 
       const mongoState = mongoose.connection.readyState;
       const status = mongoState === 1 ? 'connected' : 'disconnected';
@@ -25,7 +24,7 @@ export async function statusRoute(app: FastifyInstance) {
     } catch (error) {
       return reply.code(500).send({
         status: 'error',
-        message: error.message,
+        message: (error as Error).message,
       });
     }
   });

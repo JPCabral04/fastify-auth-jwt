@@ -1,22 +1,29 @@
-import Fastify from 'fastify';
-import { authRoutes } from './routes/auth.routes';
-import { statusRoute } from './routes/status.route';
+import Fastify from "fastify";
+import { authRoutes } from "./routes/auth.route";
+import { statusRoute } from "./routes/status.route";
+import { connectDB } from "./plugins/db";
 
 const fastify = Fastify({
   logger: true,
 });
 
-fastify.get('/', (request, reply) => {
-  reply.send({ hello: 'world' });
-});
+async function startServer() {
+  try {
+    await connectDB();
 
-fastify.register(statusRoute);
+    fastify.get("/", (request, reply) => {
+      reply.send({ hello: "world" });
+    });
 
-fastify.register(authRoutes);
+    fastify.register(statusRoute);
+    fastify.register(authRoutes);
 
-fastify.listen({ port: 3000 }, (_err, _address) => {
-  if (_err) {
-    fastify.log.error(_err);
+    await fastify.listen({ port: 3000 });
+
+  } catch (error) {
+    fastify.log.error(error);
     process.exit(1);
   }
-});
+}
+
+startServer();
