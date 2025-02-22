@@ -1,6 +1,5 @@
 import { FastifyInstance } from 'fastify';
 import mongoose from 'mongoose';
-import { connectDB } from '../plugins/db';
 
 export async function statusRoute(app: FastifyInstance) {
   app.get('/status', async (request, reply) => {
